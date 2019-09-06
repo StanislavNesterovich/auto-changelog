@@ -1,16 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from socket import *
-import time
+import socket
 
-s = socket(AF_INET, SOCK_STREAM)
-s.bind(('', 80))
-s.listen(5)
+sock = socket.socket()
+sock.bind(('', 9090))
+sock.listen(1)
+conn, addr = sock.accept()
 
+print('connected:', addr)
 
 while True:
-    client, addr = s.accept()
-    print("test" % str(addr))
-    print(client)
-    timestr = time.ctime(time.time()) + "\r\n"
-    client.send(timestr.encode('ascii'))
-    client.close()
+    data = conn.recv(1024)
+    if not data:
+        break
+    conn.send(data.upper())
+
+conn.close()
